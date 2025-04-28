@@ -20,15 +20,18 @@ void dfs(int node)
         s.pop();
 
         if (!visited[curr_node])
-         {
+        {
             visited[curr_node] = true;
             cout << curr_node << " ";
 
-            // Push adjacent nodes to stack (in reverse order for correct DFS)
+            // Parallelizing the exploration of neighbors
+            #pragma omp parallel for
             for (int i = graph[curr_node].size() - 1; i >= 0; i--)
-             {
+            {
                 int adj_node = graph[curr_node][i];
                 if (!visited[adj_node]) {
+                    // Push adjacent node to stack only if it hasn't been visited
+                    #pragma omp critical
                     s.push(adj_node);
                 }
             }
@@ -59,4 +62,3 @@ int main() {
 
     return 0;
 }
-
